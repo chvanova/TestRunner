@@ -6,12 +6,14 @@ Please add 'skip' decorator here. If test method annotated with this decorator t
 Semantic is like this:
 """
 
-def skip(func):
 
+def skip(func):
     skip.count = 0
+
     def wrapper(func):
         skip.count += 1
-        return skip
+        return wrapper
+
     return wrapper
 
 """
@@ -60,7 +62,8 @@ class TestRunner:
         for test in test_names:
             try:
                 test(test_suite())
-                self.passed += 1
+                if 'test' in test.__name__:
+                    self.passed += 1
             except AssertionError:
                 self.failed += 1
             except FileNotFoundError:
